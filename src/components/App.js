@@ -1,37 +1,42 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState} from 'react'
 
+import Home from '../pages/Home';
+import Cart from '../pages/Cart';
+import Layout from './Layout';
+import pizzas from '../assets/pizzas.json';
+import { Routes, Route, useRoutes } from 'react-router-dom';
 
-import Header from './Header'
-import pizzas from '../assets/pizzas.json'
-import { Routes, Route } from 'react-router-dom'
-import Home from '../pages/Home'
+import useRoutesWrapper from '../hooks/useRoutesWrapper'
 function App() {
   const [pizzas,setPizzas] = useState([]);
-
+  const [loading, setLoading] = useState(true)
+  
   useEffect( ()=>{
     fetch('https://64d8ae005f9bf5b879ce729f.mockapi.io/items')
     .then(resp => resp.json())
     .then(data => setPizzas(data))
-    // .finally(()=> setLoading(false))
+    .finally(()=> setLoading(false))
     .catch(err => {
       alert(`Ошибка запроса к серверу: ${err.message}`)
     })
   }, [])
-return (
-  <div className="wrapper">
-    <Header />
-      <div className="content">
-        <div className="container">
-          <Routes>
-            <Route path='/' element={<Home pizzas={pizzas}/>}/>
-            <Route path='/cart' element="Cart" />
-            <Route path='/about' element="About" />
-            <Route path='*' element="NOT FOUND" />
-          </Routes>
-        </div>
-      </div>
-  </div>
-  )
-}
 
-export default App
+const routes = useRoutesWrapper();
+
+return (
+  // <Layout>
+  //   {/*{routes} */}
+  // </Layout>    
+
+  <Routes>
+    <Route path='/' element={<Layout/>}>
+      <Route index element={<Home pizzas={pizzas} loading={loading}/>}/>
+      <Route path='cart' element={<Cart />} />
+      <Route path='about' element="About" />
+      <Route path='*' element="NOT FOUND" />
+    </Route>
+  </Routes> 
+    )
+  }
+  export default App
+  

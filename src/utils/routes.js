@@ -1,2 +1,20 @@
-export const HOME_ROUTE = '/'; 
-export const CART_ROUTE = '/cart';
+import Home from "../pages/Home";
+import Cart from "../pages/Cart";
+import NotFound from "../pages/NotFound";
+
+import {HOME_ROUTE, CART_ROUTE} from "./patches";
+
+export const routes = [
+    {
+        path: HOME_ROUTE,
+        element: <Home pizzas={[1,2,3]}/>
+    },
+    {
+        path: CART_ROUTE,
+        element: <Cart/>
+    },
+    {
+        path: '*',
+        element: <NotFound/>
+    },
+  ]

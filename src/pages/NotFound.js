@@ -1,9 +1,15 @@
 import React from 'react'
-
 function NotFound() {
   return (
-    <div>
-      NotFound
+    <div className='notfound-wrapper'>
+      <h1>
+        <span>😑</span>
+        <br/>
+          Ничего не найдено
+      </h1>
+        <p>
+          Данная страница отсутствует
+        </p>
     </div>
   )
 }

@@ -8,10 +8,12 @@ function Header() {
   return (
     <div className="header">
         <div className="container">
-            // <NavLink to='/' className={setActive}>Главная
-            // </NavLink>
-            // <NavLink to='/cart' className={setActive}>Корзина
-            // </NavLink>
+            {/*
+             <NavLink to='/' className={setActive}>Главная
+            </NavLink>
+             <NavLink to='/cart' className={setActive}>Корзина
+            </NavLink>*/}
+
             <NavLink to='/' className="header__logo">
             <img width="38" src={pizzaLogo} alt="Pizza logo" />
             <div>

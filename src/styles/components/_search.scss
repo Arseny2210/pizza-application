@@ -1,0 +1,26 @@
+@import "../variables";
+
+.search-wrapper {
+    width: 350px;
+    position: relative;
+    input {
+        border: 2px solid orange;
+        padding: 10px;
+        width: 100%;
+        border-radius: 40px;
+        font-size: 18px;
+    }
+    button { 
+        cursor: pointer;
+        border: none;
+        background: transparent;
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        :hover {
+            transition: 0.3s;
+            transform: scale(1.1);
+        }
+    }
+}

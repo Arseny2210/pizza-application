@@ -1,15 +1,14 @@
 import React, { useRef, useState, useContext } from 'react'
 import {AppContext} from './App'
 
-function Sort({active, setActive}) {
+function Sort() {
   const sortTypes = ['популярности','цене', 'алфавиту'];
   
   const [isOpen, setIsOpen] = useState(false);
 
-  const text = useContext(AppContext);
-  console.log(text)
+  const{activeSort, setActiveSort} = useContext(AppContext);
 
-  let svgStyles = (active.isUp) ? 'sortSvg sortSvg__sort-down' : 'sortSvg'
+  let svgStyles = (activeSort.isUp) ? 'sortSvg sortSvg__sort-down' : 'sortSvg'
 
 
   // function clickSvgHandler (e) {
@@ -29,7 +28,7 @@ function Sort({active, setActive}) {
     <div className="sort">
             <div className="sort__label">
                 <svg
-                onClick={()=> setActive({type: active.type, isUp: !active.isUp})}
+                onClick={()=> setActiveSort({type: activeSort.type, isUp: !activeSort.isUp})}
                 className={svgStyles}
                 width="10"
                 height="6"
@@ -43,7 +42,7 @@ function Sort({active, setActive}) {
                 />
                 </svg>
                 <b>Сортировка по:</b>
-                <span onClick={()=>setIsOpen(!isOpen)}>{sortTypes[active.type]}
+                <span onClick={()=>setIsOpen(!isOpen)}>{sortTypes[activeSort.type]}
                 </span>
             </div>
             {/*условный рендеринг*/}
@@ -53,7 +52,7 @@ function Sort({active, setActive}) {
                 <ul>
                   {
                     sortTypes.map( (type, ind) => (
-                      <li onClick={()=>{setActive({type: ind, isUp: active.isUp}); setIsOpen(false)}} key={ind} className={active.type == ind ? 'active' : ''}>{type}</li>
+                      <li onClick={()=>{setActiveSort({type: ind, isUp: activeSort.isUp}); setIsOpen(false)}} key={ind} className={activeSort.type == ind ? 'active' : ''}>{type}</li>
                     ))
                   }
                 </ul>

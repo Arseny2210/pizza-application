@@ -14,13 +14,39 @@ import { Routes, Route, useRoutes } from 'react-router-dom';
   export const AppContext = createContext()
 
 function App() {
+  const [pizzas,setPizzas] = useState([]);
+  let filteredPizzas = pizzas
+  const [loading, setLoading] = useState(true)
+  const [activeCategory, setActiveCategory] = useState(0);
+  const [activeSort, setActiveSort] = useState({type: 0, isUp: true});
 
-// const routes = useRoutesWrapper();
+  useEffect(() => {
+    const category = activeCategory == 0 ? '' : activeCategory;
+
+    const sort = ['rating', 'price', 'title'];
+    const order = activeSort.isUp ? 'asc' : 'desc';
+    const search = 'ы';
+    fetch(`https://64d8ae005f9bf5b879ce729f.mockapi.io/items?category=${category}&sortBy=${sort[activeSort.type]}&order=${order}&title=title&search=${search}`)
+    .then(resp => resp.json())
+    .then(data => setPizzas(data))
+    .finally(()=> setLoading(false))
+    .catch(err => {
+      alert(`Ошибка запроса к серверу: ${err.message}`)
+    })
+  }, [activeCategory, activeSort])
+
+
 return (
   // <>
   //   {routes}
   // </>    
-  <AppContext.Provider value={{a:'abc',b: 'css'}}>
+  <AppContext.Provider value={
+    { pizzas, setPizzas,
+      loading,setLoading, 
+      activeCategory, setActiveCategory,
+      activeSort, setActiveSort,  
+    }
+  }>
     <Routes>
         <Route path='/' element={<Layout/>}>
         <Route index element={<Home/>}/>

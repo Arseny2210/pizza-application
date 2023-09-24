@@ -2,14 +2,15 @@ import React, { useState,useRef, useContext } from 'react'
 import { AppContext } from './App';
 
 function Search() {
+  const {pizzas, setPizzas, setSearch} = useContext( AppContext);
     const inputRef = useRef(null);
-    const {pizzas, setPizzas} = useContext( AppContext);
     function searcHeandler () {
       const value = inputRef.current.value;
-      const filtered = pizzas.filter ((item) => {
-        return item.title.toLowerCase().indexOf(value.toLowerCase()) !== -1;
-      })
-      setPizzas(filtered)
+      setSearch(value)
+      // const filtered = pizzas.filter ((item) => {
+      //   return item.title.toLowerCase().indexOf(value.toLowerCase()) !== -1;
+      // })
+      // setPizzas(filtered)
     }
   return (
     <div className='search-wrapper'>

@@ -9,22 +9,23 @@ import Cart from '../pages/Cart';
 import Layout from './Layout';
 import pizzas from '../assets/pizzas.json';
 import { Routes, Route, useRoutes } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 
   export const AppContext = createContext()
 
 function App() {
-  
+  const activeCategory =  useSelector((state)=>state.filter.category);
+
   const [pizzas,setPizzas] = useState([]);
   let filteredPizzas = pizzas
   const [loading, setLoading] = useState(true)
-  const [activeCategory, setActiveCategory] = useState(0);
+  
   const [activeSort, setActiveSort] = useState({type: 0, isUp: true});
   const[search, setSearch] = useState('')
   const store = { 
   pizzas, setPizzas,
-    loading,setLoading, 
-    activeCategory, setActiveCategory,
+    loading, setLoading, 
     activeSort, setActiveSort,  
     setSearch
   }

@@ -1,10 +1,38 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { addItem } from '../store/slices/cartSlice';
 
-function PizzaBlock({id, imageUrl, title, types, sizes, price, category, rating }) {
+function PizzaBlock({id, 
+    imageUrl, 
+    title, 
+    types, 
+    sizes, 
+    price, 
+    category, 
+    rating }) {
+
+    const cartItems = useSelector(state => state.cart.items)
+
+    const dispatch = useDispatch()
 
     const [activeSize, setActiveSize] = useState(0);
     const [activeType, setActiveType] = useState(0);
-  return (
+
+
+    // const ind = useMemo(() => {
+    //     return cartItems.findIndex(item => item.id == id)
+    // }, [id])
+
+    const ind = cartItems.findIndex(item => item.id == id)
+    
+    let qty = 0
+
+    if (ind != -1) { 
+    qty = cartItems[ind].qty
+    }
+
+        
+    return (
     <div className="pizza-block">
         <img
         className="pizza-block__image"
@@ -52,8 +80,8 @@ function PizzaBlock({id, imageUrl, title, types, sizes, price, category, rating 
         fill="white"
         />
             </svg>
-            <span>Добавить</span>
-            <i>0</i>
+            <span onClick={()=> dispatch(addItem(id))}>Добавить</span>
+            <i>{qty}</i>
         </div>
     </div>
 </div>

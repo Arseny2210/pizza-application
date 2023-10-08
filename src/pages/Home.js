@@ -12,16 +12,18 @@ function Home() {
 
   
 
+// loading == false ? (pizzas.length > 0 ? <h2 className="content__title">Все пиццы</h2> : <h2 className="content__title">Пиццы не найдены</h2>) : null
 
+// loading == false && (pizzas.length > 0 ? <h2 className="content__title">Все пиццы</h2> : <h2 className="content__title">Пиццы не найдены</h2>)
   return (
     <>
             <div className="content__top">
             <Categories/>
             <Sort/>
             </div>
-            <h2 className="content__title">
-            Все пиццы
-            </h2>
+            {
+              loading == false && (pizzas.length > 0 ? <h2 className="content__title">Все пиццы</h2> : <h2 className="content__title">Пиццы не найдены</h2>)
+            }
             <div className="content__items">
             {!loading ? 
               pizzas.map(pizza => (

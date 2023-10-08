@@ -1,14 +1,22 @@
 import React, { useRef, useState, useContext } from 'react'
 import {AppContext} from './App'
+import { useDispatch, useSelector } from 'react-redux';
+import { setSort } from '../store/slices/filterSlice';
 
 function Sort() {
+  const {type, isUp} = useSelector((state) => state.filter.sort)
+
+  const dispatch = useDispatch()
+
   const sortTypes = ['популярности','цене', 'алфавиту'];
   
   const [isOpen, setIsOpen] = useState(false);
 
-  const{activeSort, setActiveSort} = useContext(AppContext);
+  // const{activeSort, setActiveSort} = useContext(AppContext);
 
-  let svgStyles = (activeSort.isUp) ? 'sortSvg sortSvg__sort-down' : 'sortSvg'
+  //  сразу диструтурировали 
+
+  let svgStyles = (isUp) ? 'sortSvg sortSvg__sort-down' : 'sortSvg'
 
 
   // function clickSvgHandler (e) {
@@ -28,7 +36,7 @@ function Sort() {
     <div className="sort">
             <div className="sort__label">
                 <svg
-                onClick={()=> setActiveSort({type: activeSort.type, isUp: !activeSort.isUp})}
+                onClick={()=> dispatch(setSort({type, isUp: !isUp}))}
                 className={svgStyles}
                 width="10"
                 height="6"
@@ -42,7 +50,7 @@ function Sort() {
                 />
                 </svg>
                 <b>Сортировка по:</b>
-                <span onClick={()=>setIsOpen(!isOpen)}>{sortTypes[activeSort.type]}
+                <span onClick={()=>setIsOpen(!isOpen)}>{sortTypes[type]}
                 </span>
             </div>
             {/*условный рендеринг*/}
@@ -52,7 +60,7 @@ function Sort() {
                 <ul>
                   {
                     sortTypes.map( (type, ind) => (
-                      <li onClick={()=>{setActiveSort({type: ind, isUp: activeSort.isUp}); setIsOpen(false)}} key={ind} className={activeSort.type == ind ? 'active' : ''}>{type}</li>
+                      <li onClick={()=>{dispatch(setSort({type: ind, isUp})); setIsOpen(false)}} key={ind} className={type == ind ? 'active' : ''}>{type}</li>
                     ))
                   }
                 </ul>

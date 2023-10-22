@@ -2,7 +2,8 @@ import React, { useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { addItem } from '../store/slices/cartSlice';
 
-function PizzaBlock({id, 
+function PizzaBlock({
+    id, 
     imageUrl, 
     title, 
     types, 
@@ -11,25 +12,27 @@ function PizzaBlock({id,
     category, 
     rating }) {
 
-    const cartItems = useSelector(state => state.cart.items)
-
-    const dispatch = useDispatch()
-
-    const [activeSize, setActiveSize] = useState(0);
-    const [activeType, setActiveType] = useState(0);
-
+        const cartItems = useSelector(state => state.cart.items)
+        const dispatch = useDispatch()
+        
+        const [activeSize, setActiveSize] = useState(0);
+        const [activeType, setActiveType] = useState(0);
+        
+        const item = {id,imageUrl,title, price, activeSize, activeType}
 
     // const ind = useMemo(() => {
     //     return cartItems.findIndex(item => item.id == id)
     // }, [id])
-
-    const ind = cartItems.findIndex(item => item.id == id)
     
-    let qty = 0
-
-    if (ind != -1) { 
-    qty = cartItems[ind].qty
-    }
+    const [ind, qty] = useMemo(()=> {
+        const ind = cartItems.findIndex(item => item.id == id)
+        let qty = 0
+        if (ind != -1) { 
+            qty = cartItems[ind].totalQty;
+        }
+        return [ind,qty];
+    }, [id, cartItems])
+    
 
         
     return (
@@ -60,14 +63,16 @@ function PizzaBlock({id,
 
         {
             sizes.map( (size, ind) => (
-                <li onClick={()=> setActiveSize(size)} key={size} className={size == activeSize ? 'active': ''}>{size} см.</li>
+                <li onClick={()=> setActiveSize(ind)} key={size} className={ind == activeSize ? 'active': ''}>{size} см.</li>
             ))
         }
     </ul>
 </div>
 <div className="pizza-block__bottom">
     <div className="pizza-block__price">от {price} Р</div>
-    <div className="button button--outline button--add">
+    <div 
+        onClick={()=> dispatch(addItem(item))}
+        className="button button--outline button--add">
     <svg
         width="12"
         height="12"
@@ -80,7 +85,7 @@ function PizzaBlock({id,
         fill="white"
         />
             </svg>
-            <span onClick={()=> dispatch(addItem(id))}>Добавить</span>
+            <span>Добавить</span>
             <i>{qty}</i>
         </div>
     </div>

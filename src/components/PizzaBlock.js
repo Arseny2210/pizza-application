@@ -16,7 +16,7 @@ function PizzaBlock({
         const dispatch = useDispatch()
         
         const [activeSize, setActiveSize] = useState(0);
-        const [activeType, setActiveType] = useState(0);
+        const [activeType, setActiveType] = useState(types[0]);
         
         const item = {id,imageUrl,title, price, activeSize, activeType}
 

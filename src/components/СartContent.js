@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import emptyCart from '../assets/img/empty-cart.png'
 import {addItem} from '../store/slices/cartSlice'
@@ -9,10 +9,24 @@ function СartContent() {
   const dispatch = useDispatch();
   const types = ['тонкое', 'традиционное'];
   const sizes = [26, 30, 40];
+
+  const addItemHandler = useCallback((item)=> {
+    dispatch(
+      addItem(item)
+    )
+  }, [dispatch])
+  // дипенденсис - зависимости
+
+  const deleteItemHandler = useCallback((item)=> {
+    dispatch(
+      deleteItem(item)
+    )
+  }, [dispatch])
+
 return  cart.length == 0 ? (
   <div className='cart cart--empty'>
     <h2>Корзина пустая</h2>
-      <p>Вероятней всего, вы не заказывали ещще пиццу
+      <p>Вероятней всего, вы не заказывали еще пиццу
       <br/>
       Для заказа перейдите на главную страницу 
     </p>
@@ -39,8 +53,8 @@ return  cart.length == 0 ? (
             </p>
           </div>
           <div className="cart__item-count">
-            <div onClick={()=> dispatch(
-              deleteItem(
+            <div onClick={()=> 
+              deleteItemHandler(
                   { id: item.id, 
                     imageUrl: item.imageUrl, 
                     title: item.title,
@@ -48,8 +62,8 @@ return  cart.length == 0 ? (
                     activeSize: sizesItem.size, 
                     activeType: detailsItem.type,
                   }
-                  ) 
-                )} className="button button--outline button--circle cart__item-count-minus">
+              )
+                  } className="button button--outline button--circle cart__item-count-minus">
               <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M5.92001 3.84V5.76V8.64C5.92001 9.17016 5.49017 9.6 4.96001 9.6C4.42985 9.6 4.00001 9.17016 4.00001 8.64L4 5.76L4.00001 3.84V0.96C4.00001 0.42984 4.42985 0 4.96001 0C5.49017 0 5.92001 0.42984 5.92001 0.96V3.84Z"
@@ -61,8 +75,8 @@ return  cart.length == 0 ? (
 
             </div>
             <b>{sizesItem.qty}</b>
-            <div onClick={()=> dispatch(
-              addItem(
+            <div onClick={()=> 
+              addItemHandler(
                   { id: item.id, 
                     imageUrl: item.imageUrl, 
                     title: item.title,
@@ -70,8 +84,8 @@ return  cart.length == 0 ? (
                     activeSize: sizesItem.size, 
                     activeType: detailsItem.type,
                   }
-                  ) 
-                )} className="button button--outline button--circle cart__item-count-plus">
+              )
+              } className="button button--outline button--circle cart__item-count-plus">
               <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M5.92001 3.84V5.76V8.64C5.92001 9.17016 5.49017 9.6 4.96001 9.6C4.42985 9.6 4.00001 9.17016 4.00001 8.64L4 5.76L4.00001 3.84V0.96C4.00001 0.42984 4.42985 0 4.96001 0C5.49017 0 5.92001 0.42984 5.92001 0.96V3.84Z"
@@ -86,7 +100,7 @@ return  cart.length == 0 ? (
           <div className="cart__item-price">
             <b>{item.price * sizesItem.qty}</b>
           </div>
-          <div className="cart__item-remove">
+            {/*<div className="cart__item-remove">
             <div className="button button--outline button--circle">
               <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -97,7 +111,7 @@ return  cart.length == 0 ? (
                   fill="#EB5A1E" />
               </svg>
             </div>
-          </div>
+                </div> */}
             </div>
           )
         )

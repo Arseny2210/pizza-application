@@ -1,19 +1,21 @@
-import React, { createContext, useEffect, useState} from 'react'
+import React, { Suspense, createContext, lazy, useEffect, useState} from 'react'
 
-import NotFound from '../pages/NotFound';
 import useRoutesWrapper from '../hooks/useRoutesWrapper'
 
-
 import Home from '../pages/Home';
-import Cart from '../pages/Cart';
 import Layout from './Layout';
 import pizzas from '../assets/pizzas.json';
 import { Routes, Route, useRoutes } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPizzas, setPizzas } from '../store/slices/pizzasSlice';
 
+import Loader from './Loader.js'
 
-export const AppContext = createContext()
+const Pizza = lazy(() => import('../pages/Pizza.js'));
+const Cart = lazy (()=> import('../pages/Cart.js'));
+const NotFound = lazy(() => import('../pages/NotFound.js'))
+
+export const AppContext = createContext();
 
 function App() {
   const activeCategory =  useSelector((state)=>state.filter.category);
@@ -23,39 +25,27 @@ function App() {
 
   const dispatch = useDispatch()
 
-
   let filteredPizzas = pizzas
 
-  
-  // const[search, setSearch] = useState('')
-
-  // const store = { 
-  //   pizzas, setPizzas,
-  //   loading, setLoading, 
-  //   setSearch
-  // }
-  
   const [data, setData] = useState([]);
-
-  // useEffect(() => {
-  //   dispatch(fetchPizzas())
-  // }, [])
 
   useEffect(() => {
     dispatch(fetchPizzas())
-
   }, [activeCategory, type, isUp, search])
-
 
 return (
     <>
-    <Routes>
+    <Suspense fallback={<Loader/>}>
+      <Routes>
         <Route path='/' element={<Layout/>}>
-        <Route index element={<Home/>}/>
-        <Route path='cart' element={<Cart />} />
-        <Route path='*' element={<NotFound/>} />
+          <Route index element={<Home/>}/>
+            <Route path='cart' element={<Cart />} />
+              {/* :id -подставляет id элемента. */} 
+            <Route path='pizzas/:id' element={<Pizza />}/>
+            <Route path='*' element={<NotFound/>} />
         </Route>
-    </Routes> 
+      </Routes> 
+    </Suspense>
     </>
   );
 }

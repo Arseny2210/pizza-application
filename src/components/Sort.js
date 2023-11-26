@@ -1,4 +1,4 @@
-import React, { useRef, useState, useContext } from 'react'
+import React, { useRef, useState, useContext, useCallback } from 'react'
 import {AppContext} from './App'
 import { useDispatch, useSelector } from 'react-redux';
 import { setSort } from '../store/slices/filterSlice';
@@ -12,31 +12,15 @@ function Sort() {
   
   const [isOpen, setIsOpen] = useState(false);
 
-  // const{activeSort, setActiveSort} = useContext(AppContext);
-
-  //  сразу диструтурировали 
-
   let svgStyles = (isUp) ? 'sortSvg sortSvg__sort-down' : 'sortSvg'
 
-
-  // function clickSvgHandler (e) {
-  //   setIsUp(!isUp)
-  //   let svg = e.target;
-  //   if(!e.target.matches('svg')) {
-  //     svg=e.target.parentElement;
-  //   }
-  //   svg.classList.toggle('sortSvg__sort-down')
-  // }
-
-  // let svgRef = useRef(null);
-  // function clickSvgHandler() {
-  //   svgRef.current.classList.toggle('sortSvg__sort-down')
-  // }
   return (
     <div className="sort">
             <div className="sort__label">
                 <svg
-                onClick={()=> dispatch(setSort({type, isUp: !isUp}))}
+                onClick={
+                  useCallback(()=> {
+                    dispatch(setSort({type, isUp: !isUp}))}, [dispatch, type, isUp])}
                 className={svgStyles}
                 width="10"
                 height="6"
@@ -50,7 +34,12 @@ function Sort() {
                 />
                 </svg>
                 <b>Сортировка по:</b>
-                <span onClick={()=>setIsOpen(!isOpen)}>{sortTypes[type]}
+                <span 
+                onClick={useCallback(() => { 
+                  setIsOpen(!isOpen)
+                }, [isOpen])}
+                >
+                  {sortTypes[type]}
                 </span>
             </div>
             {/*условный рендеринг*/}

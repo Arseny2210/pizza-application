@@ -113,7 +113,7 @@ const cartSlice = createSlice({
           state.items = [];
           state.count = 0; 
           state.total = 0;
-        }
+        }, 
     }
 })
 

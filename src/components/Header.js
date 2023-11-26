@@ -5,18 +5,11 @@ import Search from './Search'
 import { useSelector } from 'react-redux'
 
 function Header() {
-const {total, count} = useSelector(state=> state.cart)
-    // const setActive = ({isActive}) => 
-    // isActive ? 'active-link' : '' ;
+    const {total, count} = useSelector(state=> state.cart)
     const location = useLocation();
   return (
     <div className="header">
         <div className="container">
-            {/*
-             <NavLink to='/' className={setActive}>Главная
-            </NavLink>
-             <NavLink to='/cart' className={setActive}>Корзина
-            </NavLink>*/}
 
             <NavLink to='/' className="header__logo">
             <img width="38" src={pizzaLogo} alt="Pizza logo" />
@@ -25,7 +18,7 @@ const {total, count} = useSelector(state=> state.cart)
                 <p>самая вкусная пицца во вселенной</p>
             </div>
             </NavLink>
-            {location.pathname !== '/cart' && <Search />}
+            {location.pathname !== '/cart' && !/\/pizzas\/.*/.test(location.pathname) && <Search />  }
         <div className="header__cart">
         <NavLink to="/cart" className="button button--cart">
             <span>{total} ₽</span>

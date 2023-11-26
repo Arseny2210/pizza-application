@@ -6,22 +6,6 @@ const initialState = {
     error: null,
 }
 
-// export const fetchPizzas = createAsyncThunk(
-//     'pizzas/fetchPizzas', 
-//     async (_, {rejectWithValue})=> {
-//       try { 
-//         const resp = await fetch(`https://64d8ae0a5f9bf5b879ce72a8.mockapi.io/items`);
-//         if (!resp.ok) {
-//             throw new Error('Данные не пришли');
-//         }
-//         const data = await resp.json();
-//        return data;
-//     } catch (error) {
-//     // return 'Данные не пришли'
-//     return rejectWithValue('Данные не пришли')
-//     }
-// })
-
 export const fetchPizzas = createAsyncThunk(
     'pizzas/fetchPizzas', 
     async (_, {rejectWithValue, getState})=> {
@@ -46,9 +30,7 @@ export const fetchPizzas = createAsyncThunk(
             .then(([sorted,searched])=>{
                 const newData = sorted.filter(sortedItem => searched.some(searchedItem => sortedItem.id == searchedItem.id));
                 return newData
-            // dispatch(setPizzas(newData))
             })
-            // .finally(()=> setLoading(false))
         const data = await resp;
        return data;
     } catch (error) {

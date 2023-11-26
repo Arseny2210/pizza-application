@@ -1,8 +1,9 @@
-import React, { useMemo, useState } from 'react'
+import React, {memo, useCallback, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { addItem } from '../store/slices/cartSlice';
+import { Link } from 'react-router-dom'
 
-function PizzaBlock({
+const PizzaBlock = memo( function({
     id, 
     imageUrl, 
     title, 
@@ -10,7 +11,8 @@ function PizzaBlock({
     sizes, 
     price, 
     category, 
-    rating }) {
+    rating, 
+    isTitleClickable = true}) {
 
         const cartItems = useSelector(state => state.cart.items)
         const dispatch = useDispatch()
@@ -18,11 +20,7 @@ function PizzaBlock({
         const [activeSize, setActiveSize] = useState(0);
         const [activeType, setActiveType] = useState(types[0]);
         
-        const item = {id,imageUrl,title, price, activeSize, activeType}
-
-    // const ind = useMemo(() => {
-    //     return cartItems.findIndex(item => item.id == id)
-    // }, [id])
+        const item = {id, imageUrl, title, price, activeSize, activeType}
     
     const [ind, qty] = useMemo(()=> {
         const ind = cartItems.findIndex(item => item.id == id)
@@ -34,21 +32,40 @@ function PizzaBlock({
     }, [id, cartItems])
     
 
-        
-    return (
+    const changeTypeHandler = useCallback(function(type) {
+        setActiveType(type);
+    }, [])
+
+    const changeSizeHandler = useCallback((ind) => {
+        setActiveSize(ind)
+    }, [])
+
+    const addItemHandler = useCallback((item)=> {
+        dispatch(addItem(item));
+    },[dispatch])
+
+return (
     <div className="pizza-block">
-        <img
-        className="pizza-block__image"
-        src={imageUrl}
-        alt="Pizza"
-        />
-<h4 className="pizza-block__title">{title}</h4>
+    { isTitleClickable ?
+        <Link to={`pizzas/${id}`}>
+            <img className="pizza-block__image" src={imageUrl} alt="Pizza"/>
+            <h4 className="pizza-block__title">
+                {title}
+            </h4>
+        </Link> : 
+        <>
+            <img className="pizza-block__image" src={imageUrl} alt="Pizza"/>
+            <h4 className="pizza-block__title">
+                {title}
+            </h4>
+        </>
+    }
 <div className="pizza-block__selector">
     <ul>
     {
         types.map (type =>(
             (types.length > 1) ?
-                <li onClick={()=>setActiveType(type)} key={type} className={type == activeType ? 'active' : ''}> 
+                <li onClick={()=>changeTypeHandler(type)} key={type} className={type == activeType ? 'active' : ''}> 
                 { type == 0 ? 'тонкое' : 'традиционное'}
                 </li>
             :  
@@ -62,8 +79,12 @@ function PizzaBlock({
     <ul>
 
         {
-            sizes.map( (size, ind) => (
-                <li onClick={()=> setActiveSize(ind)} key={size} className={ind == activeSize ? 'active': ''}>{size} см.</li>
+            sizes.map((size, ind) => (
+                <li 
+                onClick={() => changeSizeHandler(ind)} 
+                key={size} 
+                className={ind == activeSize ? 'active': ''}>       {size} см.
+                </li>
             ))
         }
     </ul>
@@ -71,7 +92,7 @@ function PizzaBlock({
 <div className="pizza-block__bottom">
     <div className="pizza-block__price">от {price} Р</div>
     <div 
-        onClick={()=> dispatch(addItem(item))}
+        onClick={()=> addItemHandler(item)}
         className="button button--outline button--add">
     <svg
         width="12"
@@ -92,5 +113,6 @@ function PizzaBlock({
 </div>
   )
 }
+)
 
 export default PizzaBlock

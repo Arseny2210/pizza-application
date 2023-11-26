@@ -1,17 +1,23 @@
-import React from 'react'
+import React, { Suspense, lazy, memo, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import СartContent from '../components/СartContent'
 import { Link } from 'react-router-dom'
 import {clearItems} from '../store/slices/cartSlice'
+import Loader from '../components/Loader'
 
-function Cart() {
+const СartContent = lazy (()=>import('../components/СartContent.js'))
+
+const Cart = memo (function() {
   const pizzas = useSelector(state => state.pizzas.items)
   const cart = useSelector(state=> state.cart.items)
   const dispatch = useDispatch();
-  const  total = useSelector(state => state.cart.total) 
+  const total = useSelector(state => state.cart.total) 
   const count = useSelector(state => state.cart.count)
 
-  return (
+  const clearItemsHandler = useCallback(()=> {
+    dispatch(clearItems());
+  }, [dispatch])
+
+return (
     <div className="content">
       <div className="container container--cart">
         <div className="cart">
@@ -32,7 +38,9 @@ function Cart() {
               </svg>
               Корзина</h2>)
           }
-              {cart.length > 0 ? (<div onClick={()=>dispatch(clearItems())} className="cart__clear">
+              {cart.length > 0 ? (
+                <div 
+                onClick={clearItemsHandler} className="cart__clear">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M2.5 5H4.16667H17.5" stroke="#B6B6B6" strokeWidth="1.2" strokeLinecap="round"
                   strikeLinejoin="round" />
@@ -50,7 +58,9 @@ function Cart() {
               }
               </div>
           <div className="content__items">
-            <СartContent/>
+            <Suspense fallback={<Loader/>}>
+              <СartContent/>
+            </Suspense>
           </div>
           <div className="cart__bottom">
             <div className="cart__bottom-details">
@@ -63,7 +73,6 @@ function Cart() {
                   <path d="M7 13L1 6.93015L6.86175 1" stroke="#D3D3D3" strokeWidth="1.5" strokeLinecap="round"
                     strikeLinejoin="round" />
                 </svg>
-
                 <span>Вернуться назад</span>
               </Link>
               {cart.length !== 0 &&
@@ -77,6 +86,7 @@ function Cart() {
       </div>
     </div>
   )
-}
+})
+
 
 export default Cart
